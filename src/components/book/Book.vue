@@ -76,18 +76,16 @@
             prop="name"
             label="书名"
             :show-overflow-tooltip="true"
-            width="110">
+            width="150">
           <template slot-scope="scope">
-            <div v-show="!isEditing">
-              {{scope.row.name}}
+            <div v-show="!isEditing[scope.$index]">
+              {{ scope.row.name }}
             </div>
-            <div v-show="isEditing">
-              <el-input v-model="scope.row.name"></el-input>
+            <div v-show="isEditing[scope.$index]">
+              <input style="padding: 0;font-size: 14px" v-model="scope.row.name"></input>
             </div>
           </template>
-<!--          <template slot-scope="scope" v-show="isEditing">-->
-<!--            <el-input v-bind="scope.row.name"></el-input>-->
-<!--          </template>-->
+
         </el-table-column>
 
         <el-table-column
@@ -95,6 +93,14 @@
             label="作者"
             :show-overflow-tooltip="true"
             width="110">
+          <template slot-scope="scope">
+            <div v-show="!isEditing[scope.$index]">
+              {{ scope.row.author }}
+            </div>
+            <div v-show="isEditing[scope.$index]">
+              <input style="padding: 0;font-size: 14px" v-model="scope.row.author"></input>
+            </div>
+          </template>
         </el-table-column>
         <el-table-column
             prop="pictureUrl"
@@ -102,12 +108,14 @@
             width="75">
           <template slot-scope="scope">
             <el-popover
+                v-show="!isEditing[scope.$index]"
                 placement="right"
                 title="预览图"
                 trigger="hover">
               <img :src="scope.row.pictureUrl" alt=""/>
               <img slot="reference" :src="scope.row.pictureUrl" style="max-height: 50px;max-width: 150px" alt="">
             </el-popover>
+            <input type="text" v-model="scope.row.pictureUrl" v-show="isEditing[scope.$index]">
           </template>
         </el-table-column>
         <el-table-column
@@ -115,50 +123,102 @@
             label="类别"
             :show-overflow-tooltip="true"
             width="150">
+          <template slot-scope="scope">
+            <div v-show="!isEditing[scope.$index]">
+              {{ scope.row.type }}
+            </div>
+            <div v-show="isEditing[scope.$index]">
+              <input style="padding: 0;font-size: 14px" v-model="scope.row.type"></input>
+            </div>
+          </template>
         </el-table-column>
         <el-table-column
             sortable
             prop="pubDate"
             label="出版时间"
-            width="120">
+            width="100">
+          <template slot-scope="scope">
+            <div v-show="!isEditing[scope.$index]">
+              {{ scope.row.pubDate }}
+            </div>
+            <div v-show="isEditing[scope.$index]">
+              <input style="padding: 0;font-size: 14px" v-model="scope.row.pubDate"></input>
+            </div>
+          </template>
         </el-table-column>
         <el-table-column
             prop="press"
             label="出版社"
             :show-overflow-tooltip="true"
-            width="120">
+            width="100">
+          <template slot-scope="scope">
+            <div v-show="!isEditing[scope.$index]">
+              {{ scope.row.press }}
+            </div>
+            <div v-show="isEditing[scope.$index]">
+              <input style="padding: 0;font-size: 14px" v-model="scope.row.press"></input>
+            </div>
+          </template>
         </el-table-column>
         <el-table-column
             prop="originalPrice"
             label="原价"
             width="50">
+          <template slot-scope="scope">
+            <div v-show="!isEditing[scope.$index]">
+              {{ scope.row.originalPrice }}
+            </div>
+            <div v-show="isEditing[scope.$index]">
+              <input style="padding: 0;font-size: 14px" v-model="scope.row.originalPrice"></input>
+            </div>
+          </template>
         </el-table-column>
-        <el-table-column
-            prop="discount"
-            label="折扣"
-            width="50">
-        </el-table-column>
+
         <el-table-column
             prop="discountPrice"
             label="折扣价"
             width="80">
+          <template slot-scope="scope">
+            <div v-show="!isEditing[scope.$index]">
+              {{ scope.row.discountPrice }}
+            </div>
+            <div v-show="isEditing[scope.$index]">
+              <input style="padding: 0;font-size: 14px" v-model="scope.row.discountPrice"></input>
+            </div>
+          </template>
         </el-table-column>
         <el-table-column
             prop="isbn"
             label="ISBN号"
             width="130">
+          <template slot-scope="scope">
+            <div v-show="!isEditing[scope.$index]">
+              {{ scope.row.isbn }}
+            </div>
+            <div v-show="isEditing[scope.$index]">
+              <input style="padding: 0;font-size: 14px" v-model="scope.row.isbn"></input>
+            </div>
+          </template>
         </el-table-column>
         <el-table-column
             prop="inventory"
             label="存货"
             width="50">
+          <template slot-scope="scope">
+            <div v-show="!isEditing[scope.$index]">
+              {{ scope.row.inventory }}
+            </div>
+            <div v-show="isEditing[scope.$index]">
+              <input style="padding: 0;font-size: 14px" v-model="scope.row.inventory"></input>
+            </div>
+          </template>
         </el-table-column>
         <el-table-column
             prop="state"
             label="状态"
             width="70">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.state" active-color="#13ce66" inactive-color="gray"/>
+            <el-switch v-model="scope.row.state" active-color="#13ce66" inactive-color="gray" @change="update(scope.$index, scope.row)"/>
           </template>
         </el-table-column>
         <el-table-column
@@ -166,14 +226,24 @@
             label="推荐"
             width="80">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.commend" active-color="#13ce66" inactive-color="gray"/>
+            <el-switch v-model="scope.row.commend" active-color="#13ce66" inactive-color="gray" @change="update(scope.$index, scope.row)"/>
           </template>
         </el-table-column>
         <el-table-column
             label="操作">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" icon="el-icon-edit" @click="edit(scope.row)"></el-button>
-            <el-button type="danger" size="mini" icon="el-icon-delete" @click="showDelete(scope.row.id)"></el-button>
+            <el-button v-show="!isEditing[scope.$index]" type="primary" size="mini" icon="el-icon-edit"
+                       @click="edit(scope.$index)">编辑
+            </el-button>
+            <el-button v-show="!isEditing[scope.$index]" type="danger" size="mini" icon="el-icon-delete"
+                       @click="showDelete(scope.row.id)">删除
+            </el-button>
+            <el-button v-show="isEditing[scope.$index]" type="success" size="mini" icon="el-icon-check"
+                       @click="update(scope.$index, scope.row)">完成
+            </el-button>
+            <el-button v-show="isEditing[scope.$index]" type="default" size="mini" icon="el-icon-check"
+                       @click="cancelEdit(scope.$index)">取消
+            </el-button>
           </template>
         </el-table-column>
 
@@ -318,6 +388,7 @@ export default {
       loading: true,
       bookList: [],
       delBookId: '',
+      isEditing: [],
       newBook: {
         id: '',
         name: '',
@@ -338,7 +409,6 @@ export default {
       //角色对话框的可见性
       deleteDialogVisible: false,
       addDialogVisible: false,
-      isEditing: false,
       editBook: {},
       condition: {
         name: '',
@@ -350,11 +420,19 @@ export default {
   },
   created() {
     this.getBookList(1, this.size);
+    this.isEditing = new Array(this.size)
+    for (let i = 0; i < this.size; i++) {
+      this.isEditing[i] = false
+    }
   },
   methods: {
     handleSizeChange(val) {
       this.size = val;
       this.getBookList(1, this.size)
+      this.isEditing = new Array(this.size)
+      for (let i = 0; i < this.size; i++) {
+        this.isEditing[i] = false
+      }
     },
     handleCurrentChange(current) {
       this.current = current
@@ -413,20 +491,51 @@ export default {
       })
       this.deleteDialogVisible = false
     },
-    edit(row) {
-      this.isEditing = true
+    update(index, row) {
       this.editBook = JSON.parse(JSON.stringify(row))
-      console.log(this.editBook)
+      console.log("@@@@@", this.editBook)
+      updateBook(this.editBook).then(res => {
+        if (res.code !== 200) {
+          return this.$message.error("修改书籍失败：" + res.message)
+        }
+        setTimeout(() => {
+          this.getBookList(this.current, this.size)
+        }, 500)
+        return this.$message.success("成功修改书籍！");
+      })
+      this.$set(this.isEditing, index, false)
+    },
+    edit(index) {
+      let n = 0;
+      for (let i = 0; i < this.size; i++) {
+        if (this.isEditing[i] === true) {
+          // console.log(n)
+          n++
+          if (n > 0) {
+            return this.$message.error("请先完成当前修改");
+          }
+        }
+      }
+      this.$set(this.isEditing, index, true)
     },
     showDelete(bookId) {
       this.delBookId = bookId
       this.deleteDialogVisible = true
+    },
+    cancelEdit(index) {
+      this.$set(this.isEditing, index, false)
     }
-  }
+  },
+
 
 }
 </script>
 
 <style scoped>
+input{
+  height: 50px;
+  border: none;
+  background-color: #d6e8f5;
+}
 
 </style>
