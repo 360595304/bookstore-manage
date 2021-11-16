@@ -47,7 +47,7 @@
           <el-button
               type="success"
               icon="el-icon-plus"
-              @click="addDialogVisible = true"
+              @click="showAdd"
           >添加
           </el-button>
         </el-form-item>
@@ -218,7 +218,8 @@
             label="状态"
             width="70">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.state" active-color="#13ce66" inactive-color="gray" @change="update(scope.$index, scope.row)"/>
+            <el-switch v-model="scope.row.state" active-color="#13ce66" inactive-color="gray"
+                       @change="update(scope.$index, scope.row)"/>
           </template>
         </el-table-column>
         <el-table-column
@@ -226,7 +227,8 @@
             label="推荐"
             width="80">
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.commend" active-color="#13ce66" inactive-color="gray" @change="update(scope.$index, scope.row)"/>
+            <el-switch v-model="scope.row.commend" active-color="#13ce66" inactive-color="gray"
+                       @change="update(scope.$index, scope.row)"/>
           </template>
         </el-table-column>
         <el-table-column
@@ -440,15 +442,22 @@ export default {
     },
     //获取用户列表
     async getBookList(current, size) {
-      this.loading = true
-      getBookList(current, size, this.condition).then(res => {
-        if (res.code !== 200) {
-          return this.$message.error("获取用户列表失败:" + res.message);
-        }
-        this.bookList = res.data.bookArr;
-        this.total = res.data.total
-      });
-      this.loading = false
+      if (this.editCheck()) {
+        this.loading = true
+        getBookList(current, size, this.condition).then(res => {
+          if (res.code !== 200) {
+            return this.$message.error("获取用户列表失败:" + res.message);
+          }
+          this.bookList = res.data.bookArr;
+          this.total = res.data.total
+        });
+        this.loading = false
+      }
+    },
+    showAdd() {
+      if (this.editCheck()) {
+        this.addDialogVisible = true
+      }
     },
     //关闭角色对话框
     handleClose(done) {
@@ -460,11 +469,13 @@ export default {
           });
     },
     reset() {
-      this.condition.name = ''
-      this.condition.author = ''
-      this.condition.press = ''
-      this.condition.type = ''
-      this.getBookList(1, this.size)
+      if (this.editCheck()) {
+        this.condition.name = ''
+        this.condition.author = ''
+        this.condition.press = ''
+        this.condition.type = ''
+        this.getBookList(1, this.size)
+      }
     },
     add() {
       this.newBook.discount = Math.floor(this.newBook.discountPrice / this.newBook.originalPrice * 100)
@@ -493,7 +504,7 @@ export default {
     },
     update(index, row) {
       this.editBook = JSON.parse(JSON.stringify(row))
-      console.log("@@@@@", this.editBook)
+      this.editBook.discount = Math.floor(this.editBook.discountPrice / this.editBook.originalPrice * 100)
       updateBook(this.editBook).then(res => {
         if (res.code !== 200) {
           return this.$message.error("修改书籍失败：" + res.message)
@@ -506,21 +517,29 @@ export default {
       this.$set(this.isEditing, index, false)
     },
     edit(index) {
+      if (this.editCheck()) {
+        this.$set(this.isEditing, index, true)
+      }
+    },
+    editCheck() {
       let n = 0;
       for (let i = 0; i < this.size; i++) {
         if (this.isEditing[i] === true) {
           // console.log(n)
           n++
           if (n > 0) {
-            return this.$message.error("请先完成当前修改");
+            this.$message.error("请先完成当前修改");
+            return false
           }
         }
       }
-      this.$set(this.isEditing, index, true)
+      return true
     },
     showDelete(bookId) {
-      this.delBookId = bookId
-      this.deleteDialogVisible = true
+      if (this.editCheck()) {
+        this.delBookId = bookId
+        this.deleteDialogVisible = true
+      }
     },
     cancelEdit(index) {
       this.$set(this.isEditing, index, false)
@@ -532,7 +551,7 @@ export default {
 </script>
 
 <style scoped>
-input{
+input {
   height: 50px;
   border: none;
   background-color: #d6e8f5;
