@@ -168,6 +168,7 @@
               {{ scope.row.createTime }}
           </template>
         </el-table-column>
+
         <el-table-column
             prop="state"
             label="状态"
@@ -254,98 +255,6 @@
           </template>
         </el-dialog>
 
-    <!--  添加书籍弹出框  -->
-    <!--    <el-dialog-->
-    <!--        :visible="addDialogVisible"-->
-    <!--        title="添加书籍"-->
-    <!--        width="50%"-->
-    <!--    >-->
-    <!--      <el-form style="display: flex;flex-wrap: wrap;justify-content: space-around">-->
-    <!--        <el-form-item label="id" label-width="80px">-->
-    <!--          <el-col :span="24">-->
-    <!--            <el-input v-model="newBook.id" type="number"/>-->
-    <!--          </el-col>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="书名" label-width="80px">-->
-    <!--          <el-col :span="24">-->
-    <!--            <el-input v-model="newBook.name" type="text"/>-->
-    <!--          </el-col>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="作者" label-width="80px">-->
-    <!--          <el-col :span="24">-->
-    <!--            <el-input v-model="newBook.author" type="text"/>-->
-    <!--          </el-col>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="类型" label-width="80px">-->
-    <!--          <el-col :span="24">-->
-    <!--            <el-input v-model="newBook.type" type="text"/>-->
-    <!--          </el-col>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="出版时间" label-width="80px">-->
-    <!--          <el-col :span="22">-->
-    <!--            <el-date-picker-->
-    <!--                v-model="newBook.pubDate"-->
-    <!--                type="month"-->
-    <!--                format="yyyy[年]MM[月]"-->
-    <!--                placeholder="选择时间"-->
-    <!--            />-->
-    <!--          </el-col>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="出版社" label-width="80px">-->
-    <!--          <el-col :span="24">-->
-    <!--            <el-input v-model="newBook.press" type="text"/>-->
-    <!--          </el-col>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="原价" label-width="80px">-->
-    <!--          <el-col :span="24">-->
-    <!--            <el-input v-model="newBook.originalPrice" type="number"/>-->
-    <!--          </el-col>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="折扣价" label-width="80px">-->
-    <!--          <el-col :span="24">-->
-    <!--            <el-input v-model="newBook.discountPrice" type="number"/>-->
-    <!--          </el-col>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="ISBN号" label-width="80px">-->
-    <!--          <el-col :span="24">-->
-    <!--            <el-input v-model="newBook.isbn" type="number"/>-->
-    <!--          </el-col>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="库存" label-width="80px">-->
-    <!--          <el-col :span="24">-->
-    <!--            <el-input v-model="newBook.inventory" type="number"/>-->
-    <!--          </el-col>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="图片链接" label-width="80px">-->
-    <!--          <el-col :span="24">-->
-    <!--            <el-input v-model="newBook.pictureUrl" type="text"/>-->
-    <!--          </el-col>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="简介" label-width="80px">-->
-    <!--          <el-col :span="24">-->
-    <!--            <el-input v-model="newBook.intro" type="textarea"/>-->
-    <!--          </el-col>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="推荐" label-width="80px">-->
-    <!--          <el-col :span="24">-->
-    <!--            <el-switch v-model="newBook.state" active-color="#13ce66" inactive-color="gray"/>-->
-    <!--          </el-col>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="状态" label-width="80px">-->
-    <!--          <el-col :span="24">-->
-    <!--            <el-switch v-model="newBook.state" active-color="#13ce66" inactive-color="gray"/>-->
-    <!--          </el-col>-->
-    <!--        </el-form-item>-->
-    <!--      </el-form>-->
-
-    <!--      <template #footer>-->
-    <!--      <span class="dialog-footer">-->
-    <!--        <el-button @click="addDialogVisible = false">取消</el-button>-->
-    <!--        <el-button type="primary" @click="add">确定</el-button>-->
-    <!--      </span>-->
-    <!--      </template>-->
-    <!--    </el-dialog>-->
-
   </div>
 </template>
 
@@ -367,27 +276,27 @@ export default {
       state: [
         {
           'label': '创建',
-          'value': 1,
+          'value': 0,
           'class': "new"
         },
         {
           'label': '已付款',
-          'value': 2,
+          'value': 1,
           'class': "pay"
         },
         {
           'label': '配送中',
-          'value': 3,
+          'value': 2,
           'class': "delivery"
         },
         {
           'label': '已收货',
-          'value': 4,
+          'value': 3,
           'class': "finish"
         },
         {
           'label': '异常',
-          'value': 5,
+          'value': 4,
           'class': "danger"
         }
       ],
@@ -456,8 +365,8 @@ export default {
         }
         setTimeout(() => {
           this.getBookList(this.current, this.size)
-        }, 500)
-        return this.$message.success("成功删除书籍！");
+        }, 1000)
+        return this.$message.success("成功删除订单！");
       })
       this.deleteDialogVisible = false
     },
